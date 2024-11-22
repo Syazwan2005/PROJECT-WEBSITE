@@ -1,0 +1,228 @@
+/* General Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Roboto', sans-serif;
+}
+
+body {
+    background-color: #f4f6f9; /* Light background for modern feel */
+    color: #333; /* Dark text for readability */
+}
+
+/* Header */
+.header {
+    background-color: #181850; /* Dark purple header */
+    padding: 1rem 2rem;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo img {
+    height: 50px; /* Optimized logo size */
+    width: auto;
+    border-radius: 5px;
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 1.5rem;
+}
+
+.nav-links a {
+    color: white;
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+.nav-links a:hover {
+    color: #4a41d1; /* Highlighted color on hover */
+}
+
+/* Admin Dashboard Section */
+.dashboard-section {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background-color: #ffffff; /* White background for content */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+
+.dashboard-section h2 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    font-weight: 700;
+    color: #333;
+}
+
+.dashboard-section h3 {
+    font-size: 1.5rem;
+    font-weight: 400;
+    margin-bottom: 2rem;
+}
+
+.search-container {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.search-container input[type="text"] {
+    padding: 0.8rem 1.5rem;
+    width: 100%;
+    max-width: 400px;
+    border: 1px solid #ccc;
+    border-radius: 25px;
+    font-size: 1rem;
+    margin-right: 10px;
+    transition: border-color 0.3s ease;
+}
+
+.search-container button {
+    padding: 0.8rem 2rem;
+    background-color: #4a41d1;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+.search-container input[type="text"]:focus {
+    border-color: #4a41d1;
+}
+
+.search-container button:hover {
+    background-color: #3a31b0;
+}
+
+/* Users Table */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 2rem;
+}
+
+table th, table td {
+    padding: 12px 20px;
+    text-align: left;
+    border: 1px solid #ddd;
+}
+
+table th {
+    background-color: #f4f6f9;
+    color: #333;
+    font-weight: 600;
+}
+
+table td {
+    background-color: #fff;
+    color: #666;
+}
+
+table td .action-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+button {
+    background-color: #4a41d1;
+    color: white;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    font-size: 0.9rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #3a31b0;
+}
+
+button:active {
+    transform: scale(0.98);
+}
+
+/* Pagination */
+.pagination {
+    text-align: center;
+    margin-top: 2rem;
+}
+
+.pagination a {
+    padding: 10px 20px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    color: #4a41d1;
+    text-decoration: none;
+    font-size: 1rem;
+    margin: 0 5px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.pagination a:hover {
+    background-color: #4a41d1;
+    color: white;
+}
+
+.pagination a.active {
+    background-color: #4a41d1;
+    color: white;
+}
+
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .navbar {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .nav-links {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .dashboard-section {
+        padding: 1.5rem;
+        margin: 1rem;
+    }
+
+    .search-container input[type="text"] {
+        max-width: 100%;
+    }
+
+    .pagination a {
+        padding: 8px 16px;
+    }
+}
+
+@media (max-width: 768px) {
+    .dashboard-section h2 {
+        font-size: 2rem;
+    }
+
+    .dashboard-section h3 {
+        font-size: 1.3rem;
+    }
+
+    .search-container input[type="text"] {
+        max-width: 100%;
+    }
+
+    .pagination a {
+        padding: 8px 16px;
+    }
+}

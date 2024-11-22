@@ -1,0 +1,171 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gems Store</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <header class="header">
+        <nav class="navbar">
+            <a href="index.php" class="logo">
+                <img src="image/gems_store_4-removebg-preview.png" alt="GEMS STORE Logo" style="height: 60px;">
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.php">Home</a></li>
+                <li><a href="#">Blog</a></li>
+                <li><a href="#">MLBB Tools</a></li>
+                <li><a href="register.php" class="register-btn">Register</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="confirmation">
+        <!-- Step 1: Fill Data -->
+        <div class="step">
+            <h2>1. Fill Data <span class="step-info" title="Please enter your in-game User ID for correct delivery.">?</span></h2>
+            <input type="text" id="user-id" placeholder="Enter Riot Username" aria-label="User ID">
+            <p>To find your User ID, click on your avatar in the top left corner of the main game screen. Then go to the “Basic Info” tab. Your user ID is shown below your nickname.</p>
+        </div>
+
+        <!-- Step 2: Choose Packages -->
+        <div class="step">
+            <h2>2. Choose Packages <span class="step-info" title="Select your preferred package for Valorant Points.">?</span></h2>
+            <div class="package-options">
+                <button onclick="selectPackage('Valorant Malaysia')">Valorant (Malaysia)</button>
+                <button onclick="selectPackage('Valorant Malaysia Slow')">Valorant (Malaysia) Slow</button>
+            </div>
+        </div>
+
+        <!-- Step 3: Choose Points (Valorant Points) -->
+        <div class="step">
+            <h2>3. Choose Valorant Points <span class="step-info" title="Choose the denomination you wish to buy.">?</span></h2>
+            <p id="points-instruction">Please select the denomination you'd like to purchase.</p>
+            <div class="valorant-points-options" id="valorant-points-options"></div>
+        </div>
+
+        <!-- Step 4: Choose Payment Methods -->
+        <div class="step">
+            <h2>4. Choose Payment Methods <span class="step-info" title="Select your preferred payment method.">?</span></h2>
+            <p id="selected-price">Selected Package Price: <strong id="price-display">RM 0.00</strong></p>
+            <div class="payment-options">
+                <button onclick="payWith('e-wallet')" disabled>Pay with E-Wallet</button>
+                <button onclick="payWith('bank')" disabled>Pay with Bank</button>
+                <button onclick="payWith('whatsapp')" disabled>Deal directly in WhatsApp</button>
+            </div>
+        </div>
+
+        <!-- Step 5: Make a Purchase -->
+        <div class="step">
+            <h2>5. Make a Purchase <span class="step-info" title="Complete your purchase by providing contact details.">?</span></h2>
+            <input type="email" placeholder="your@email.com (Optional)" aria-label="Email">
+            <input type="text" placeholder="+60123456789 (Required)" aria-label="Phone Number">
+            <input type="text" id="promo-code" placeholder="Enter Promo Code">
+            <button class="apply-code" onclick="applyPromoCode()">Apply Promo Code</button>
+            <p>Total Price: <strong id="selected-product">RM 0.00</strong></p>
+            <button class="buy-now" onclick="generateReceipt()">Buy Now</button>
+        </div>
+    </section>
+
+<script>
+    const valorantPointsOptions = {
+        "Valorant Malaysia": [
+            { amount: 475, price: 18.40 },
+            { amount: 1000, price: 38.00 },
+            { amount: 1475, price: 56.30 },
+            { amount: 2050, price: 74.00 },
+            { amount: 3050, price: 111.00 },
+            { amount: 3650, price: 129.00 },
+            { amount: 5350, price: 184.00 },
+            { amount: 11000, price: 370.00 }
+        ],
+        "Valorant Malaysia Slow": [
+            { amount: 475, price: 17.40 },
+            { amount: 1000, price: 36.00 },
+            { amount: 1475, price: 53.30 },
+            { amount: 2050, price: 70.00 },
+            { amount: 3050, price: 105.50 },
+            { amount: 3650, price: 121.70 },
+            { amount: 5350, price: 174.00 },
+            { amount: 11000, price: 342.40 }
+        ]
+    };
+
+    let selectedPrice = 0;
+    let selectedPackage = '';
+    let selectedAmount = 0;
+
+    function selectPackage(packageName) {
+        selectedPackage = packageName;
+        const pointsContainer = document.getElementById('valorant-points-options');
+        pointsContainer.innerHTML = '';
+
+        valorantPointsOptions[packageName].forEach(points => {
+            const button = document.createElement('button');
+            button.className = 'points-button';
+            button.textContent = `${points.amount} VP`;
+            button.onclick = () => selectPoints(points.price, points.amount);
+            pointsContainer.appendChild(button);
+        });
+    }
+
+    function selectPoints(price, amount) {
+        selectedPrice = price;
+        selectedAmount = amount;
+
+        document.getElementById('price-display').textContent = `RM ${price.toFixed(2)}`;
+        document.getElementById('selected-product').textContent = `RM ${price.toFixed(2)}`;
+        document.querySelectorAll('.payment-options button').forEach(button => button.disabled = false);
+    }
+
+    function applyPromoCode() {
+        const promoCode = document.getElementById('promo-code').value.trim();
+        let discount = 0;
+
+        if (promoCode === "DISCOUNT10") {
+            discount = selectedPrice * 0.10;
+            alert("Promo code applied! You get a 10% discount.");
+        } else {
+            alert("Invalid promo code.");
+        }
+
+        const finalPrice = selectedPrice - discount;
+        document.getElementById('selected-product').textContent = `RM ${finalPrice.toFixed(2)}`;
+        document.getElementById('price-display').textContent = `RM ${finalPrice.toFixed(2)}`;
+    }
+
+    function generateOrderId() {
+        return `GEMS${Math.floor(1000000000 + Math.random() * 9000000000)}`;
+    }
+
+    function generateReceipt() {
+        const username = document.getElementById('user-id').value.trim();
+        const promoCode = document.getElementById('promo-code').value.trim();
+        const finalPrice = document.getElementById('selected-product').textContent;
+        const orderId = generateOrderId();
+        const gameName = "Valorant";
+        const itemPurchased = `${selectedAmount} VP`;
+
+        window.location.href = `receipt.html?username=${encodeURIComponent(username)}&game=${encodeURIComponent(gameName)}&item=${encodeURIComponent(itemPurchased)}&promoCode=${encodeURIComponent(promoCode)}&price=${encodeURIComponent(finalPrice)}&orderId=${encodeURIComponent(orderId)}`;
+    }
+</script>
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="help">
+        <h3>NEED HELP?</h3></div>
+        <a href="https://www.whatsapp.com/" class="whatsapp-btn" target="_blank">WhatsApp</a>
+    </div>
+    <div class="social-media">
+        <a href="https://www.facebook.com/">Facebook</a>
+        <a href="https://www.instagram.com/">Instagram</a>
+    </div>
+    <p>© Copyright Gems Store 2024, All Rights Reserved.</p>
+    <p>
+        <a href="terms.html" class="terms">Terms & Conditions</a> | 
+        <a href="privacy-policy.html" class="privacy-policy">Privacy Policy</a>
+    </p>
+</footer>
+</body>
+</html>

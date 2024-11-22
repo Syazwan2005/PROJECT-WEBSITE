@@ -1,0 +1,201 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gems Store</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <header class="header">
+        <nav class="navbar">
+            <a href="index.php" class="logo">
+                <img src="image/gems_store_4-removebg-preview.png" alt="GEMS STORE Logo" style="height: 60px;">
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.php">Home</a></li>
+                <li><a href="#">Blog</a></li>
+                <li><a href="#">MLBB Tools</a></li>
+                <li><a href="register.php" class="register-btn">Register</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="confirmation">
+        <!-- Step 1: Fill Data -->
+        <div class="step">
+            <h2>1. Fill Data <span class="step-info">?</span></h2>
+            <input type="text" id="user-id" placeholder="Enter User ID">
+            
+            <!-- Server ID Dropdown -->
+            <select id="server-id">
+                <option value="">Select Server ID</option>
+                <option value="asia">Asia</option>
+                <option value="america">America</option>
+                <option value="europe">Europe</option>
+                <option value="taiwan-hongkong-mongolia">Taiwan, Hong Kong, Mongolia</option>
+            </select>
+            <p>Click on your character icon in the top left corner, and your User ID will appear directly below your profile icon.</p>
+        </div>
+
+        <!-- Step 2: Choose Packages -->
+        <div class="step">
+            <h2>2. Choose Packages <span class="step-info">?</span></h2>
+            <div class="package-options">
+                <button onclick="selectPackage('Genshin Impact')">Genshin Impact</button>
+                <!-- Add more games here as needed -->
+            </div>
+        </div>
+
+        <!-- Step 3: Choose Genesis Crystal -->
+        <div class="step">
+            <h2>3. Choose Genesis Crystal <span class="step-info">?</span></h2>
+            <p id="crystal-instruction">Please select the denomination you'd like to purchase.</p>
+            <div class="genesis-crystal-options" id="genesis-crystal-options">
+                <!-- Genesis Crystal options will be dynamically added here -->
+            </div>
+        </div>
+
+        <!-- Step 4: Choose Payment Methods -->
+        <div class="step">
+            <h2>4. Choose Payment Methods <span class="step-info">?</span></h2>
+            <p id="selected-price">Selected Package Price: <strong id="price-display">RM 0.00</strong></p>
+            <div class="payment-options">
+                <button onclick="payWith('e-wallet')" disabled>Pay with E-Wallet</button>
+                <button onclick="payWith('bank')" disabled>Pay with Bank</button>
+                <button onclick="payWith('whatsapp')" disabled>Deal directly in WhatsApp</button>
+            </div>
+        </div>
+
+        <!-- Step 5: Make a Purchase -->
+        <div class="step">
+            <h2>5. Make a Purchase <span class="step-info">?</span></h2>
+            <input type="email" placeholder="your@email.com (Optional)">
+            <input type="text" placeholder="+60123456789 (Required)">
+            <input type="text" id="promo-code" placeholder="Enter Promo Code">
+            <button class="apply-code" onclick="applyPromoCode()">Apply Promo Code</button>
+            <p>Select product: <strong id="selected-product">RM 0.00</strong></p>
+            <button class="buy-now" onclick="generateReceipt()">Buy Now</button>
+        </div>
+    </section>
+
+    <script>
+        const genesisCrystalOptions = [
+        { amount: 60, price: 3.30 },
+       { amount: 120, price: 6.60 },
+       { amount: 180, price: 9.90 },
+       { amount: 240, price: 13.20 },
+       { amount: 300, price: 16.50 },
+       { amount: 330, price: 18.15 },
+       { amount: 360, price: 19.80 },
+       { amount: 390, price: 21.45 },
+       { amount: 450, price: 24.75 },
+       { amount: 510, price: 28.05 },
+       { amount: 570, price: 31.35 },
+       { amount: 600, price: 33.00 },
+       { amount: 660, price: 36.30 },
+       { amount: 720, price: 39.60 },
+       { amount: 780, price: 42.90 },
+       { amount: 840, price: 46.20 },
+       { amount: 900, price: 49.50 },
+       { amount: 990, price: 54.45 },
+       { amount: 1090, price: 59.40 },
+       { amount: 1150, price: 62.70 },
+       { amount: 1210, price: 66.00 },
+       { amount: 1270, price: 69.30 },
+       { amount: 1330, price: 72.60 },
+       { amount: 1420, price: 77.55 },
+       { amount: 1480, price: 80.85 },
+       { amount: 1540, price: 84.15 },
+       { amount: 1600, price: 87.45 },
+       { amount: 1660, price: 90.75 },
+       { amount: 1750, price: 95.70 },
+       { amount: 1810, price: 99.00 },
+       { amount: 1870, price: 102.30 },
+       { amount: 1930, price: 105.60 },
+       { amount: 1990, price: 108.90 },
+       { amount: 2080, price: 113.85 },
+       { amount: 2180, price: 119.10 },
+       { amount: 2240, price: 122.40 },
+       { amount: 2570, price: 140.25 },
+       { amount: 2900, price: 158.10 },
+       { amount: 3330, price: 181.50 },
+       { amount: 3880, price: 211.20 },
+       { amount: 4210, price: 228.15 },
+       { amount: 4540, price: 245.10 }
+
+        ];
+
+        let selectedPrice = 0;
+
+        function selectPackage(gameName) {
+            const crystalContainer = document.getElementById('genesis-crystal-options');
+            const instruction = document.getElementById('crystal-instruction');
+
+            crystalContainer.innerHTML = '';
+            instruction.textContent = `Genesis Crystals available for ${gameName}:`;
+
+            genesisCrystalOptions.forEach(crystal => {
+                const button = document.createElement('button');
+                button.className = 'crystal-button';
+                button.textContent = `${crystal.amount} Crystals`;
+                button.onclick = () => selectCrystal(crystal.price);
+                crystalContainer.appendChild(button);
+            });
+        }
+
+        function selectCrystal(price) {
+            selectedPrice = price;
+            document.getElementById('price-display').textContent = `RM ${price.toFixed(2)}`;
+            document.getElementById('selected-product').textContent = `RM ${price.toFixed(2)}`;
+            document.querySelectorAll('.payment-options button').forEach(button => button.disabled = false);
+        }
+
+        function applyPromoCode() {
+            const promoCode = document.getElementById('promo-code').value;
+            let discount = 0;
+
+            if (promoCode === "DISCOUNT10") {
+                discount = selectedPrice * 0.10;
+                alert("Promo code applied! You get a 10% discount.");
+            } else {
+                alert("Invalid promo code.");
+            }
+
+            const finalPrice = selectedPrice - discount;
+            document.getElementById('selected-product').textContent = `RM ${finalPrice.toFixed(2)}`;
+            document.getElementById('price-display').textContent = `RM ${finalPrice.toFixed(2)}`;
+        }
+
+        function generateOrderId() {
+            return `GEMS${Math.floor(1000000000 + Math.random() * 9000000000)}`;
+        }
+
+        function generateReceipt() {
+            const userId = document.getElementById('user-id').value;
+            const serverId = document.getElementById('server-id').value;
+            const promoCode = document.getElementById('promo-code').value;
+            const finalPrice = document.getElementById('selected-product').textContent;
+            const orderId = generateOrderId();
+
+            window.location.href = `receipt.html?game=Genshin%20Impact&userId=${encodeURIComponent(userId)}&serverId=${encodeURIComponent(serverId)}&promoCode=${encodeURIComponent(promoCode)}&price=${encodeURIComponent(finalPrice)}&orderId=${encodeURIComponent(orderId)}&amount=${encodeURIComponent(selectedAmount)}`;
+        }
+    </script>
+<!-- Footer -->
+<footer class="footer">
+    <div class="help">
+        <h3>NEED HELP?</h3></div>
+        <a href="https://www.whatsapp.com/" class="whatsapp-btn" target="_blank">WhatsApp</a>
+    </div>
+    <div class="social-media">
+        <a href="https://www.facebook.com/">Facebook</a>
+        <a href="https://www.instagram.com/">Instagram</a>
+    </div>
+    <p>© Copyright Gems Store 2024, All Rights Reserved.</p>
+    <p>
+        <a href="terms.html" class="terms">Terms & Conditions</a> | 
+        <a href="privacy-policy.html" class="privacy-policy">Privacy Policy</a>
+    </p>
+</footer>
+</body>
+</html>

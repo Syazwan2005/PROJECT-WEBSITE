@@ -1,0 +1,161 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gems Store</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <header class="header">
+        <nav class="navbar">
+            <a href="index.php" class="logo">
+                <img src="image/gems_store_4-removebg-preview.png" alt="GEMS STORE Logo" style="height: 60px;">
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.php">Home</a></li>
+                <li><a href="#">Blog</a></li>
+                <li><a href="#">MLBB Tools</a></li>
+                <li><a href="register.php" class="register-btn">Register</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="confirmation">
+        <!-- Step 1: Fill Data -->
+        <div class="step">
+            <h2>1. Fill Data <span class="step-info">?</span></h2>
+            <input type="text" id="open-id" placeholder="Enter Open ID">
+            <p>To find your User ID, click on your avatar in the top left corner of the main game screen. Then go to the “Basic Info” tab. Your User ID is shown below your nickname.</p>
+        </div>
+
+        <!-- Step 2: Choose Packages -->
+        <div class="step">
+            <h2>2. Choose Packages <span class="step-info">?</span></h2>
+            <div class="package-options">
+                <button onclick="selectPackage('Call of Duty: Mobile')">Call of Duty: Mobile</button>
+            </div>
+            <p>This service is available to Indonesia account region only.</p>
+        </div>
+
+        <!-- Step 3: Choose CP -->
+        <div class="step">
+            <h2>3. Choose CP <span class="step-info">?</span></h2>
+            <p id="cp-instruction">Please choose the denomination you would like to purchase.</p>
+            <div class="cp-options" id="cp-options">
+                <!-- CP options will be dynamically added here -->
+            </div>
+        </div>
+
+        <!-- Step 4: Choose Payment Methods -->
+        <div class="step">
+            <h2>4. Choose Payment Methods <span class="step-info">?</span></h2>
+            <p id="selected-price">Selected Package Price: <strong id="price-display">RM 0.00</strong></p>
+            <div class="payment-options">
+                <button onclick="payWith('e-wallet')" disabled>Pay with E-Wallet</button>
+                <button onclick="payWith('bank')" disabled>Pay with Bank</button>
+                <button onclick="payWith('whatsapp')" disabled>Deal directly in WhatsApp</button>
+            </div>
+        </div>
+
+        <!-- Step 5: Make a Purchase -->
+        <div class="step">
+            <h2>5. Make a Purchase <span class="step-info">?</span></h2>
+            <input type="email" placeholder="your@email.com (Optional)">
+            <input type="text" placeholder="+60123456789 (Required)">
+            <input type="text" id="promo-code" placeholder="Enter Promo Code">
+            <button class="apply-code" onclick="applyPromoCode()">Apply Promo Code</button>
+            <p>Select product: <strong id="selected-product">RM 0.00</strong></p>
+            <button class="buy-now" onclick="generateReceipt()">Buy Now</button>
+        </div>
+    </section>
+
+    <script>
+        // Define CP options for Call of Duty: Mobile with prices
+        const cpOptions = {
+            "Call of Duty: Mobile": [
+                { amount: '31', price: 1.50 },
+                { amount: '63', price: 3.00 },
+                { amount: '128', price: 6.00 },
+                { amount: '321', price: 15.00 },
+            ]
+        };
+
+        let selectedPrice = 0;
+        let selectedAmount = ''; // Track selected CP amount
+
+        function selectPackage(packageName) {
+            const cpContainer = document.getElementById('cp-options');
+            const instruction = document.getElementById('cp-instruction');
+
+            // Clear previous options
+            cpContainer.innerHTML = '';
+            instruction.textContent = `CP options available for ${packageName}:`;
+
+            cpOptions[packageName].forEach(cp => {
+                const button = document.createElement('button');
+                button.className = 'cp-button';
+                button.textContent = `${cp.amount} CP`;
+                button.onclick = () => selectCP(cp.price, cp.amount);
+                cpContainer.appendChild(button);
+            });
+        }
+
+        function selectCP(price, amount) {
+            selectedPrice = price;
+            selectedAmount = amount;
+
+            document.getElementById('price-display').textContent = `RM ${price.toFixed(2)}`;
+            document.getElementById('selected-product').textContent = `RM ${price.toFixed(2)}`;
+            document.querySelectorAll('.payment-options button').forEach(button => button.disabled = false);
+        }
+
+        function applyPromoCode() {
+            const promoCode = document.getElementById('promo-code').value;
+            let discount = 0;
+
+            if (promoCode === "DISCOUNT10") {
+                discount = selectedPrice * 0.10;
+                alert("Promo code applied! You get a 10% discount.");
+            } else {
+                alert("Invalid promo code.");
+            }
+
+            const finalPrice = selectedPrice - discount;
+            document.getElementById('selected-product').textContent = `RM ${finalPrice.toFixed(2)}`;
+            document.getElementById('price-display').textContent = `RM ${finalPrice.toFixed(2)}`;
+        }
+
+        function generateOrderId() {
+            return `GEMS${Math.floor(1000000000 + Math.random() * 9000000000)}`;
+        }
+
+        function generateReceipt() {
+            const openId = document.getElementById('open-id').value;
+            const promoCode = document.getElementById('promo-code').value;
+            const finalPrice = document.getElementById('selected-product').textContent;
+            const orderId = generateOrderId();
+
+            // Include selectedAmount in the URL
+            window.location.href = `receipt.html?game=Call%20of%20Duty%20Mobile&openId=${encodeURIComponent(openId)}&promoCode=${encodeURIComponent(promoCode)}&price=${encodeURIComponent(finalPrice)}&orderId=${encodeURIComponent(orderId)}&amount=${encodeURIComponent(selectedAmount)}`;
+        }
+    </script>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="help">
+            <h3>NEED HELP?</h3>
+            <a href="https://www.whatsapp.com/" class="whatsapp-btn" target="_blank">WhatsApp</a>
+        </div>
+        <div class="social-media">
+            <a href="https://www.facebook.com/">Facebook</a>
+            <a href="https://www.instagram.com/">Instagram</a>
+        </div>
+        <p>© Copyright Gems Store 2024, All Rights Reserved.</p>
+        <p>
+            <a href="terms.html" class="terms">Terms & Conditions</a> | 
+            <a href="privacy-policy.html" class="privacy-policy">Privacy Policy</a>
+        </p>
+    </footer>
+</body>
+</html>

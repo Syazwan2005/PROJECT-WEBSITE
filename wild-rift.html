@@ -1,0 +1,169 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gems Store</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <header class="header">
+        <nav class="navbar">
+            <a href="index.php" class="logo">
+                <img src="image/gems_store_4-removebg-preview.png" alt="GEMS STORE Logo" style="height: 60px;">
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.php">Home</a></li>
+                <li><a href="#">Blog</a></li>
+                <li><a href="#">MLBB Tools</a></li>
+                <li><a href="register.php" class="register-btn">Register</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="confirmation">
+        <!-- Step 1: Fill Data -->
+        <div class="step">
+            <h2>1. Fill Data <span class="step-info">?</span></h2>
+            <input type="text" id="user-id" placeholder="Enter Riot ID">
+            <p>To find your User ID, click on your avatar in the top left corner of the main game screen. Then go to the “Basic Info” tab. Your user ID is shown below your nickname. Please input the complete User ID here, e.g. 12345678 (1234).</p>
+        </div>
+
+        <!-- Step 2: Choose Packages -->
+        <div class="step">
+            <h2>2. Choose Packages <span class="step-info">?</span></h2>
+            <div class="package-options">
+                <button onclick="selectPackage('Wild Rift')">Wild Rift</button>
+                <button onclick="selectPackage('Wild Rift Slow')">Wild Rift Slow</button>
+            </div>
+            <p>When purchasing, you can either use Global or Malaysia server even if your account registered IP is from Malaysia.</p>
+        </div>
+
+        <!-- Step 3: Choose Wild Cores -->
+        <div class="step">
+            <h2>3. Choose Wild Cores <span class="step-info">?</span></h2>
+            <p id="wild-core-instruction">Please choose the denomination you would like to purchase.</p>
+            <div class="wild-core-options" id="wild-core-options"></div>
+        </div>
+
+        <!-- Step 4: Choose Payment Methods -->
+        <div class="step">
+            <h2>4. Choose Payment Methods <span class="step-info">?</span></h2>
+            <p id="selected-price">Selected Package Price: <strong id="price-display">RM 0.00</strong></p>
+            <div class="payment-options">
+                <button onclick="payWith('e-wallet')" disabled>Pay with E-Wallet</button>
+                <button onclick="payWith('bank')" disabled>Pay with Bank</button>
+                <button onclick="payWith('whatsapp')" disabled>Deal directly in WhatsApp</button>
+            </div>
+        </div>
+
+        <!-- Step 5: Make a Purchase -->
+        <div class="step">
+            <h2>5. Make a Purchase <span class="step-info">?</span></h2>
+            <input type="email" placeholder="your@email.com (Optional)">
+            <input type="text" placeholder="+60123456789 (Required)">
+            <input type="text" id="promo-code" placeholder="Enter Promo Code">
+            <button class="apply-code" onclick="applyPromoCode()">Apply Promo Code</button>
+            <p>Select product: <strong id="selected-product">RM 0.00</strong></p>
+            <button class="buy-now" onclick="generateReceipt()">Buy Now</button>
+        </div>
+    </section>
+
+    <script>
+        const wildCoreOptions = {
+            "Wild Rift": [
+                { amount: '425', price: 18.37 },
+                { amount: '1000', price: 41.14 },
+                { amount: '1850', price: 75.25 },
+                { amount: '3275', price: 131.75 },
+                { amount: '4800', price: 188.27 },
+                { amount: '10000', price: 349.14 }
+            ],
+            "Wild Rift Slow": [
+                { amount: '425', price: 17.37 },
+                { amount: '1000', price: 38.14 },
+                { amount: '1850', price: 69.76 },
+                { amount: '3275', price: 122.13 },
+                { amount: '4800', price: 174.52 },
+                { amount: '10000', price: 376.65 }
+            ]
+        };
+
+        let selectedPrice = 0;
+        let selectedAmount = '';
+        let selectedPackage = '';
+
+        function selectPackage(packageName) {
+            selectedPackage = packageName;
+            const wildCoreContainer = document.getElementById('wild-core-options');
+            const instruction = document.getElementById('wild-core-instruction');
+
+            // Clear previous options
+            wildCoreContainer.innerHTML = '';
+            instruction.textContent = `Wild Cores available for ${packageName}:`;
+
+            wildCoreOptions[packageName].forEach(core => {
+                const button = document.createElement('button');
+                button.className = 'wild-core-button';
+                button.textContent = `${core.amount} Cores`;
+                button.onclick = () => selectWildCore(core.price, core.amount);
+                wildCoreContainer.appendChild(button);
+            });
+        }
+
+        function selectWildCore(price, amount) {
+            selectedPrice = price;
+            selectedAmount = amount;
+
+            document.getElementById('price-display').textContent = `RM ${price.toFixed(2)}`;
+            document.getElementById('selected-product').textContent = `RM ${price.toFixed(2)}`;
+            document.querySelectorAll('.payment-options button').forEach(button => button.disabled = false);
+        }
+
+        function applyPromoCode() {
+            const promoCode = document.getElementById('promo-code').value;
+            let discount = 0;
+
+            if (promoCode === "DISCOUNT10") {
+                discount = selectedPrice * 0.10;
+                alert("Promo code applied! You get a 10% discount.");
+            } else {
+                alert("Invalid promo code.");
+            }
+
+            const finalPrice = selectedPrice - discount;
+            document.getElementById('selected-product').textContent = `RM ${finalPrice.toFixed(2)}`;
+            document.getElementById('price-display').textContent = `RM ${finalPrice.toFixed(2)}`;
+        }
+
+        function generateOrderId() {
+            return `GEMS${Math.floor(1000000000 + Math.random() * 9000000000)}`;
+        }
+
+        function generateReceipt() {
+            const userId = document.getElementById('user-id').value;
+            const promoCode = document.getElementById('promo-code').value;
+            const finalPrice = document.getElementById('selected-product').textContent;
+            const orderId = generateOrderId();
+
+            window.location.href = `receipt.html?game=Wild%20Rift&userId=${encodeURIComponent(userId)}&package=${encodeURIComponent(selectedPackage)}&amount=${encodeURIComponent(selectedAmount)}&promoCode=${encodeURIComponent(promoCode)}&price=${encodeURIComponent(finalPrice)}&orderId=${encodeURIComponent(orderId)}`;
+        }
+    </script>
+<!-- Footer -->
+<footer class="footer">
+    <div class="help">
+        <h3>NEED HELP?</h3></div>
+        <a href="https://www.whatsapp.com/" class="whatsapp-btn" target="_blank">WhatsApp</a>
+    </div>
+    <div class="social-media">
+        <a href="https://www.facebook.com/">Facebook</a>
+        <a href="https://www.instagram.com/">Instagram</a>
+    </div>
+    <p>© Copyright Gems Store 2024, All Rights Reserved.</p>
+    <p>
+        <a href="terms.html" class="terms">Terms & Conditions</a> | 
+        <a href="privacy-policy.html" class="privacy-policy">Privacy Policy</a>
+    </p>
+</footer>
+</body>
+</html>

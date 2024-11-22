@@ -1,0 +1,157 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gems Store</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <header class="header">
+        <nav class="navbar">
+            <a href="index.php" class="logo">
+                <img src="image/gems_store_4-removebg-preview.png" alt="GEMS STORE Logo" style="height: 60px;">
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.php">Home</a></li>
+                <li><a href="#">Blog</a></li>
+                <li><a href="#">MLBB Tools</a></li>
+                <li><a href="register.php" class="register-btn">Register</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="confirmation">
+        <!-- Step 1: Fill Data -->
+        <div class="step">
+            <h2>1. Fill Data <span class="step-info">?</span></h2>
+            <input type="email" id="user-email" placeholder="Enter Email">
+            <input type="password" id="user-password" placeholder="Enter Password">
+            <p>To continue, we'll need your email and password to log in and recharge your account.</p>
+        </div>
+
+        <!-- Step 2: Choose Packages -->
+        <div class="step">
+            <h2>2. Choose Packages <span class="step-info">?</span></h2>
+            <div class="package-options">
+                <button onclick="selectPackage('E-Football via Login')">E-Football via Login</button>
+            </div>
+            <p>This service is available to all account regions.</p>
+        </div>
+
+        <!-- Step 3: Choose Coins -->
+        <div class="step">
+            <h2>3. Choose Coins <span class="step-info">?</span></h2>
+            <p>Please choose the denomination you would like to purchase.</p>
+            <div class="coin-options" id="coin-options">
+                <!-- Coin buttons will be dynamically added here -->
+            </div>
+        </div>
+
+        <!-- Step 4: Choose Payment Methods -->
+        <div class="step">
+            <h2>4. Choose Payment Methods <span class="step-info">?</span></h2>
+            <p id="selected-price">Selected Coin Package Price: <strong id="price-display">RM 0.00</strong></p>
+            <div class="payment-options">
+                <button onclick="payWith('e-wallet')" disabled>Pay with E-Wallet</button>
+                <button onclick="payWith('bank')" disabled>Pay with Bank</button>
+                <button onclick="payWith('whatsapp')" disabled>Deal directly in WhatsApp</button>
+            </div>
+        </div>
+
+        <!-- Step 5: Make a Purchase -->
+        <div class="step">
+            <h2>5. Make a Purchase <span class="step-info">?</span></h2>
+            <input type="email" placeholder="your@email.com (Optional)">
+            <input type="text" placeholder="+60123456789 (Required)">
+            <input type="text" id="promo-code" placeholder="Enter Promo Code">
+            <button class="apply-code" onclick="applyPromoCode()">Apply Promo Code</button>
+            <p>Select product: <strong id="selected-product">RM 0.00</strong></p>
+            <button class="buy-now" onclick="generateReceipt()">Buy Now</button>
+        </div>
+    </section>
+
+    <script>
+        // Define coin options and prices for E-Football
+        const coinOptions = {
+            "E-Football via Login": [
+                { amount: 1040, price: 20.00 },
+                { amount: 2130, price: 40.00 },
+                { amount: 3250, price: 60.00 },
+                { amount: 5700, price: 100.00 },
+            ]
+        };
+
+        let selectedPrice = 0;
+        let selectedAmount = 0; // Track selected coin amount
+
+        function selectPackage(packageName) {
+            const pointsContainer = document.getElementById('coin-options');
+            pointsContainer.innerHTML = '';
+
+            coinOptions[packageName].forEach(points => {
+                const button = document.createElement('button');
+                button.className = 'points-button';
+                button.textContent = `${points.amount} Coins`;
+                button.onclick = () => selectPoints(points.price, points.amount);
+                pointsContainer.appendChild(button);
+            });
+        }
+
+        function selectPoints(price, amount) {
+            selectedPrice = price;
+            selectedAmount = amount;
+
+            document.getElementById('price-display').textContent = `RM ${price.toFixed(2)}`;
+            document.getElementById('selected-product').textContent = `RM ${price.toFixed(2)}`;
+            document.querySelectorAll('.payment-options button').forEach(button => button.disabled = false);
+        }
+
+        function applyPromoCode() {
+            const promoCode = document.getElementById('promo-code').value;
+            let discount = 0;
+
+            if (promoCode === "DISCOUNT10") {
+                discount = selectedPrice * 0.10;
+                alert("Promo code applied! You get a 10% discount.");
+            } else {
+                alert("Invalid promo code.");
+            }
+
+            const finalPrice = selectedPrice - discount;
+            document.getElementById('selected-product').textContent = `RM ${finalPrice.toFixed(2)}`;
+            document.getElementById('price-display').textContent = `RM ${finalPrice.toFixed(2)}`;
+        }
+
+        function generateOrderId() {
+            return `GEMS${Math.floor(1000000000 + Math.random() * 9000000000)}`;
+        }
+
+        function generateReceipt() {
+    const userEmail = document.getElementById('user-email').value;
+    const promoCode = document.getElementById('promo-code').value;
+    const finalPrice = document.getElementById('selected-product').textContent;
+    const orderId = generateOrderId();
+
+    window.location.href = `receipt.html?game=E-Football&userEmail=${encodeURIComponent(userEmail)}&promoCode=${encodeURIComponent(promoCode)}&price=${encodeURIComponent(finalPrice)}&orderId=${encodeURIComponent(orderId)}`;
+}
+
+    </script>
+
+    <footer class="footer">
+        <div class="help">
+            <h3>NEED HELP?</h3></div>
+            <a href="https://www.whatsapp.com/" class="whatsapp-btn" target="_blank">WhatsApp</a>
+        </div>
+        <div class="social-media">
+            <a href="https://www.facebook.com/">Facebook</a>
+            <a href="https://www.instagram.com/">Instagram</a>
+        </div>
+        <p>© Copyright Gems Store 2024, All Rights Reserved.</p>
+        <p>
+            <a href="terms.html" class="terms">Terms & Conditions</a> | 
+            <a href="privacy-policy.html" class="privacy-policy">Privacy Policy</a>
+        </p>
+    </footer>
+</body>
+</html>

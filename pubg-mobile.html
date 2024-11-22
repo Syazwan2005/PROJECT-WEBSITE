@@ -1,0 +1,164 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gems Store</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <header class="header">
+        <nav class="navbar">
+            <a href="index.php" class="logo">
+                <img src="image/gems_store_4-removebg-preview.png" alt="GEMS STORE Logo" style="height: 60px;">
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.php">Home</a></li>
+                <li><a href="#">Blog</a></li>
+                <li><a href="#">MLBB Tools</a></li>
+                <li><a href="register.php" class="register-btn">Register</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="confirmation">
+        <!-- Step 1: Fill Data -->
+        <div class="step">
+            <h2>1. Fill Data <span class="step-info">?</span></h2>
+            <input type="text" id="player-id" placeholder="Enter Player ID">
+            <p>To find your PUBG Mobile ID, open the game, tap the profile icon in the top-right corner, and your Player ID will be displayed next to your in-game name.</p>
+        </div>
+
+        <!-- Step 2: Choose Packages -->
+        <div class="step">
+            <h2>2. Choose Packages <span class="step-info">?</span></h2>
+            <div class="package-options">
+                <button onclick="selectPackage('PUBG Mobile Malaysia')">PUBG Mobile Malaysia</button>
+            </div>
+            <p>This package is only available for Malaysia region account.</p>
+        </div>
+
+        <!-- Step 3: Choose UC -->
+        <div class="step">
+            <h2>3. Choose UC <span class="step-info">?</span></h2>
+            <p id="uc-instruction">Please choose the UC denomination you would like to purchase.</p>
+            <div class="uc-options" id="uc-options">
+                <!-- UC options will be dynamically added here -->
+            </div>
+        </div>
+
+        <!-- Step 4: Choose Payment Methods -->
+        <div class="step">
+            <h2>4. Choose Payment Methods <span class="step-info">?</span></h2>
+            <p id="selected-price">Selected Package Price: <strong id="price-display">RM 0.00</strong></p>
+            <div class="payment-options">
+                <button onclick="payWith('e-wallet')" disabled>Pay with E-Wallet</button>
+                <button onclick="payWith('bank')" disabled>Pay with Bank</button>
+                <button onclick="payWith('whatsapp')" disabled>Deal directly in WhatsApp</button>
+            </div>
+        </div>
+
+        <!-- Step 5: Make a Purchase -->
+        <div class="step">
+            <h2>5. Make a Purchase <span class="step-info">?</span></h2>
+            <input type="email" placeholder="your@email.com (Optional)">
+            <input type="text" placeholder="+60123456789 (Required)">
+            <input type="text" id="promo-code" placeholder="Enter Promo Code">
+            <button class="apply-code" onclick="applyPromoCode()">Apply Promo Code</button>
+            <p>Select product: <strong id="selected-product">RM 0.00</strong></p>
+            <button class="buy-now" onclick="generateReceipt()">Buy Now</button>
+        </div>
+    </section>
+
+    <script>
+        // Define UC options for PUBG Mobile with updated prices
+        const ucOptions = {
+            "PUBG Mobile Malaysia": [
+                { amount: '60', price: 3.20 },
+                { amount: '325', price: 16.00 },
+                { amount: '660', price: 32.00 },
+                { amount: '1800', price: 85.00 },
+                { amount: '3850', price: 170.00 },
+                { amount: '8100', price: 340.00 },
+                { amount: '10800', price: 460.00 },
+                { amount: '16200', price: 690.00 }
+            ]
+        };
+
+        let selectedPrice = 0;
+        let selectedAmount = 0; // Track selected UC amount
+
+        function selectPackage(packageName) {
+            const ucContainer = document.getElementById('uc-options');
+            const instruction = document.getElementById('uc-instruction');
+
+            // Clear previous options
+            ucContainer.innerHTML = '';
+            instruction.textContent = `UC available for ${packageName}:`;
+
+            ucOptions[packageName].forEach(uc => {
+                const button = document.createElement('button');
+                button.className = 'uc-button';
+                button.textContent = `${uc.amount} UC`;
+                button.onclick = () => selectUC(uc.price, uc.amount);
+                ucContainer.appendChild(button);
+            });
+        }
+
+        function selectUC(price, amount) {
+            selectedPrice = price;
+            selectedAmount = amount; // Set the selected UC amount
+            document.getElementById('price-display').textContent = `RM ${price.toFixed(2)}`;
+            document.getElementById('selected-product').textContent = `RM ${price.toFixed(2)}`;
+            document.querySelectorAll('.payment-options button').forEach(button => button.disabled = false);
+        }
+
+        function applyPromoCode() {
+            const promoCode = document.getElementById('promo-code').value;
+            let discount = 0;
+
+            if (promoCode === "DISCOUNT10") {
+                discount = selectedPrice * 0.10;
+                alert("Promo code applied! You get a 10% discount.");
+            } else {
+                alert("Invalid promo code.");
+            }
+
+            const finalPrice = selectedPrice - discount;
+            document.getElementById('selected-product').textContent = `RM ${finalPrice.toFixed(2)}`;
+            document.getElementById('price-display').textContent = `RM ${finalPrice.toFixed(2)}`;
+        }
+
+        function generateOrderId() {
+            return `GEMS${Math.floor(1000000000 + Math.random() * 9000000000)}`;
+        }
+
+        function generateReceipt() {
+            const playerId = document.getElementById('player-id').value;
+            const promoCode = document.getElementById('promo-code').value;
+            const finalPrice = document.getElementById('selected-product').textContent;
+            const orderId = generateOrderId();
+
+            // Include selectedAmount in the URL
+            window.location.href = `receipt.html?game=PUBG%20Mobile&playerId=${encodeURIComponent(playerId)}&promoCode=${encodeURIComponent(promoCode)}&price=${encodeURIComponent(finalPrice)}&orderId=${encodeURIComponent(orderId)}&amount=${encodeURIComponent(selectedAmount)}`;
+        }
+    </script>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="help">
+            <h3>NEED HELP?</h3></div>
+            <a href="https://www.whatsapp.com/" class="whatsapp-btn" target="_blank">WhatsApp</a>
+        </div>
+        <div class="social-media">
+            <a href="https://www.facebook.com/">Facebook</a>
+            <a href="https://www.instagram.com/">Instagram</a>
+        </div>
+        <p>© Copyright Gems Store 2024, All Rights Reserved.</p>
+        <p>
+            <a href="terms.html" class="terms">Terms & Conditions</a> | 
+            <a href="privacy-policy.html" class="privacy-policy">Privacy Policy</a>
+        </p>
+    </footer>
+</body>
+</html>

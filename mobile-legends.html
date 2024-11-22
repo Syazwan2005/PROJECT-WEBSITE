@@ -1,0 +1,208 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gems Store</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <header class="header">
+        <nav class="navbar">
+            <a href="index.php" class="logo">
+                <img src="image/gems_store_4-removebg-preview.png" alt="GEMS STORE Logo" style="height: 60px;">
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.php">Home</a></li>
+                <li><a href="#">Blog</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="confirmation">
+        <!-- Step 1: Fill Data -->
+        <div class="step">
+            <h2>1. Fill Data <span class="step-info">?</span></h2>
+            <input type="text" id="user-id" placeholder="Enter User ID">
+            <input type="text" id="server-id" placeholder="Enter Server ID">
+            <p>To find your User ID, click on your avatar in the top left corner of the main game screen...</p>
+        </div>
+
+        <!-- Step 2: Choose Packages -->
+        <div class="step">
+            <h2>2. Choose Packages <span class="step-info">?</span></h2>
+            <div class="package-options">
+                <button onclick="selectPackage('MLBB Malaysia')">MLBB Malaysia</button>
+                <button onclick="selectPackage('MLBB Indonesia')">MLBB Indonesia</button>
+                <button onclick="selectPackage('MLBB via Login')">MLBB via Login</button>
+            </div>
+        </div>
+
+        <!-- Step 3: Choose Diamonds -->
+        <div class="step">
+            <h2>3. Choose Diamonds <span class="step-info">?</span></h2>
+            <p id="diamond-instruction">Please select a package above to see available diamond options.</p>
+            <div class="diamond-options" id="diamond-options">
+                <!-- Diamond buttons will be dynamically added here -->
+            </div>
+        </div>
+
+        <!-- Step 4: Choose Payment Methods -->
+        <div class="step">
+            <h2>4. Choose Payment Methods <span class="step-info">?</span></h2>
+            <p id="selected-price">Selected Diamond Package Price: <strong id="price-display">RM 0.00</strong></p>
+            <div class="payment-options">
+                <button onclick="payWith('e-wallet')" disabled>Pay with E-Wallet</button>
+                <button onclick="payWith('bank')" disabled>Pay with Bank</button>
+                <button onclick="payWith('whatsapp')" disabled>Deal directly in WhatsApp</button>
+            </div>
+        </div>
+
+        <!-- Step 5: Make a Purchase -->
+        <div class="step">
+            <h2>5. Make a Purchase <span class="step-info">?</span></h2>
+            <input type="email" placeholder="your@email.com (Optional)">
+            <input type="text" placeholder="+60123456789 (Required)">
+            <input type="text" id="promo-code" placeholder="Enter Promo Code">
+            <button class="apply-code" onclick="applyPromoCode()">Apply Promo Code</button>
+            <p>Select product: <strong id="selected-product">RM 0.00</strong></p>
+            <button class="buy-now" onclick="generateReceipt()">Buy Now</button>
+        </div>
+    </section>
+
+    <script>
+        const diamondOptions = {
+            "MLBB Malaysia": [
+                { amount: 11, price: 1.00 },
+                { amount: 22, price: 2.00 },
+                { amount: 33, price: 3.00 },
+                { amount: 56, price: 5.00 },
+                { amount: 112, price: 10.00 },
+                { amount: 168, price: 15.00 },
+                { amount: 224, price: 20.00 },
+                { amount: 336, price: 30.00 },
+                { amount: 448, price: 40.00 },
+                { amount: 504, price: 45.00 },
+                { amount: 626, price: 55.00 },
+                { amount: 794, price: 70.00 },
+                { amount: 1018, price: 90.00 },
+                { amount: 1275, price: 110.00 },
+                { amount: 1443, price: 130.00 },
+                { amount: 1733, price: 150.00 }
+            ],
+            "MLBB Indonesia": [
+                { amount: 5, price: 0.50 },
+                { amount: 12, price: 1.20 },
+                { amount: 19, price: 1.90 },
+                { amount: 28, price: 2.80 },
+                { amount: 33, price: 3.30 },
+                { amount: 50, price: 5.00 },
+                { amount: 85, price: 7.50 },
+                { amount: 184, price: 16.00 },
+                { amount: 366, price: 32.00 },
+                { amount: 568, price: 50.00 },
+                { amount: 758, price: 65.00 },
+                { amount: 875, price: 75.00 },
+                { amount: 2010, price: 160.00 },
+                { amount: 4026, price: 320.00 },
+                { amount: 4830, price: 380.00 }
+            ],
+            "MLBB via Login": [
+                { amount: 1155, price: 50.00 },
+                { amount: 1765, price: 75.00 },
+                { amount: 2330, price: 100.00 },
+                { amount: 2975, price: 125.00 },
+                { amount: 3540, price: 150.00 },
+                { amount: 4130, price: 175.00 },
+                { amount: 4740, price: 200.00 },
+                { amount: 5305, price: 225.00 },
+                { amount: 6000, price: 250.00 },
+                { amount: 6565, price: 275.00 },
+                { amount: 7155, price: 300.00 },
+                { amount: 7765, price: 325.00 },
+                { amount: 8330, price: 350.00 },
+                { amount: 8975, price: 375.00 },
+                { amount: 9540, price: 400.00 },
+                { amount: 10130, price: 425.00 },
+                { amount: 10740, price: 450.00 },
+                { amount: 12000, price: 500.00 }
+            ]
+        };
+
+        let selectedPrice = 0;
+        let selectedPackage = '';
+        let selectedAmount = 0;
+
+        function selectPackage(packageName) {
+            selectedPackage = packageName;
+            const pointsContainer = document.getElementById('diamond-options');
+            pointsContainer.innerHTML = '';
+
+            diamondOptions[packageName].forEach(points => {
+                const button = document.createElement('button');
+                button.className = 'points-button';
+                button.textContent = `${points.amount} Diamonds`;
+                button.onclick = () => selectPoints(points.price, points.amount);
+                pointsContainer.appendChild(button);
+            });
+        }
+
+        function selectPoints(price, amount) {
+            selectedPrice = price;
+            selectedAmount = amount;
+
+            document.getElementById('price-display').textContent = `RM ${price.toFixed(2)}`;
+            document.getElementById('selected-product').textContent = `RM ${price.toFixed(2)}`;
+            document.querySelectorAll('.payment-options button').forEach(button => button.disabled = false);
+        }
+
+        function applyPromoCode() {
+            const promoCode = document.getElementById('promo-code').value;
+            let discount = 0;
+
+            if (promoCode === "DISCOUNT10") {
+                discount = selectedPrice * 0.10;
+                alert("Promo code applied! You get a 10% discount.");
+            } else {
+                alert("Invalid promo code.");
+            }
+
+            const finalPrice = selectedPrice - discount;
+            document.getElementById('selected-product').textContent = `RM ${finalPrice.toFixed(2)}`;
+            document.getElementById('price-display').textContent = `RM ${finalPrice.toFixed(2)}`;
+        }
+
+        function generateOrderId() {
+            const randomNumber = Math.floor(1000000000 + Math.random() * 9000000000);
+            return `GEMS${randomNumber}`;
+        }
+
+        function generateReceipt() {
+            const userId = document.getElementById('user-id').value;
+            const serverId = document.getElementById('server-id').value;
+            const promoCode = document.getElementById('promo-code').value;
+            const finalPrice = document.getElementById('selected-product').textContent;
+            const orderId = generateOrderId();
+
+            // Include selectedAmount in the URL
+            window.location.href = `receipt.html?game=Mobile%20Legends&userId=${encodeURIComponent(userId)}&serverId=${encodeURIComponent(serverId)}&promoCode=${encodeURIComponent(promoCode)}&price=${encodeURIComponent(finalPrice)}&orderId=${encodeURIComponent(orderId)}&amount=${encodeURIComponent(selectedAmount)}`;
+        }
+    </script>
+
+<footer class="footer">
+    <div class="help">
+        <h3>NEED HELP?</h3><br>
+        <a href="https://www.whatsapp.com/" class="whatsapp-btn" target="_blank">WhatsApp</a>
+    </div>
+    <div class="social-media">
+        <a href="https://www.facebook.com/">Facebook</a>
+        <a href="https://www.instagram.com/">Instagram</a>
+    </div>
+    <p>© Copyright Gems Store 2024, All Rights Reserved.</p>
+    <p>
+        <a href="terms.html" class="terms">Terms & Conditions</a> | 
+        <a href="privacy-policy.html" class="privacy-policy">Privacy Policy</a>
+    </p>
+</footer>
+</body>
+</html>

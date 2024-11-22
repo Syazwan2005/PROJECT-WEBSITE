@@ -1,0 +1,176 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gems Store</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <header class="header">
+        <nav class="navbar">
+            <a href="index.php" class="logo">
+                <img src="image/gems_store_4-removebg-preview.png" alt="GEMS STORE Logo" style="height: 60px;">
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.php">Home</a></li>
+                <li><a href="#">Blog</a></li>
+                <li><a href="#">MLBB Tools</a></li>
+                <li><a href="register.php" class="register-btn">Register</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="confirmation">
+        <!-- Step 1: Fill Data -->
+        <div class="step">
+            <h2>1. Fill Data <span class="step-info">?</span></h2>
+            <input type="text" id="player-id" placeholder="Enter Player ID">
+            <p>Log into the game; Click your Avatar and go to your Homepage; Expand the setting on the top right and select “View UID”; Your Player ID will be displayed.</p>
+        </div>
+
+        <!-- Step 2: Choose Packages -->
+        <div class="step">
+            <h2>2. Choose Packages <span class="step-info">?</span></h2>
+            <div class="package-options">
+                <button onclick="selectPackage('Honor of Kings')">Honor of Kings</button>
+                <button onclick="selectPackage('Honor of Kings via Login')">Honor of Kings via Login</button>
+            </div>
+            <p>This service is available to all account regions.</p>
+        </div>
+
+        <!-- Step 3: Choose Tokens -->
+        <div class="step">
+            <h2>3. Choose Tokens <span class="step-info">?</span></h2>
+            <p id="token-instruction">Please choose the denomination you would like to purchase.</p>
+            <div class="token-options" id="token-options">
+                <!-- Token options will be dynamically added here -->
+            </div>
+        </div>
+
+        <!-- Step 4: Choose Payment Methods -->
+        <div class="step">
+            <h2>4. Choose Payment Methods <span class="step-info">?</span></h2>
+            <p id="selected-price">Selected Package Price: <strong id="price-display">RM 0.00</strong></p>
+            <div class="payment-options">
+                <button onclick="payWith('e-wallet')" disabled>Pay with E-Wallet</button>
+                <button onclick="payWith('bank')" disabled>Pay with Bank</button>
+                <button onclick="payWith('whatsapp')" disabled>Deal directly in WhatsApp</button>
+            </div>
+        </div>
+
+        <!-- Step 5: Make a Purchase -->
+        <div class="step">
+            <h2>5. Make a Purchase <span class="step-info">?</span></h2>
+            <input type="email" placeholder="your@email.com (Optional)">
+            <input type="text" placeholder="+60123456789 (Required)">
+            <input type="text" id="promo-code" placeholder="Enter Promo Code">
+            <button class="apply-code" onclick="applyPromoCode()">Apply Promo Code</button>
+            <p>Select product: <strong id="selected-product">RM 0.00</strong></p>
+            <button class="buy-now" onclick="generateReceipt()">Buy Now</button>
+        </div>
+    </section>
+
+    <script>
+        // Define token options and prices for Honor of Kings
+        const tokenOptions = {
+            "Honor of Kings": [
+                { amount: '8', price: 0.30 },
+                { amount: '16+1', price: 0.50 },
+                { amount: '23+2', price: 1.25 },
+                { amount: '80+8', price: 3.75 },
+                { amount: '240+17', price: 10.50 },
+                { amount: '400+32', price: 20.75 },
+                { amount: '560+45', price: 30.90 },
+                { amount: '800+95', price: 50.40 },
+                { amount: '1200+153', price: 75.85 },
+                { amount: '2400+324', price: 150.30 },
+                { amount: '4000+580', price: 250.75 },
+                { amount: '8000+1160', price: 500.60 },
+                { amount: '13740', price: 600.45 },
+                { amount: '18320', price: 711.00 }
+            ],
+            "Honor of Kings via Login": [
+                { amount: '830', price: 45.00 },
+                { amount: '1245', price: 55.00 },
+                { amount: '2508', price: 125.00 },
+                { amount: '4180', price: 200.00 },
+                { amount: '8360', price: 340.00 }
+            ]
+        };
+
+        let selectedPrice = 0;
+        let selectedAmount = 0; // Track selected token amount
+
+        function selectPackage(packageName) {
+            const tokenContainer = document.getElementById('token-options');
+            const instruction = document.getElementById('token-instruction');
+
+            tokenContainer.innerHTML = '';
+            instruction.textContent = `Full Pricelist for ${packageName}:`;
+
+            tokenOptions[packageName].forEach(token => {
+                const button = document.createElement('button');
+                button.className = 'token-button';
+                button.textContent = `${token.amount} Tokens`;
+                button.onclick = () => selectToken(token.price, token.amount);
+                tokenContainer.appendChild(button);
+            });
+        }
+
+        function selectToken(price, amount) {
+            selectedPrice = price;
+            selectedAmount = amount;
+
+            document.getElementById('price-display').textContent = `RM ${price.toFixed(2)}`;
+            document.getElementById('selected-product').textContent = `RM ${price.toFixed(2)}`;
+            document.querySelectorAll('.payment-options button').forEach(button => button.disabled = false);
+        }
+
+        function applyPromoCode() {
+            const promoCode = document.getElementById('promo-code').value;
+            let discount = 0;
+
+            if (promoCode === "DISCOUNT10") {
+                discount = selectedPrice * 0.10;
+                alert("Promo code applied! You get a 10% discount.");
+            } else {
+                alert("Invalid promo code.");
+            }
+
+            const finalPrice = selectedPrice - discount;
+            document.getElementById('selected-product').textContent = `RM ${finalPrice.toFixed(2)}`;
+            document.getElementById('price-display').textContent = `RM ${finalPrice.toFixed(2)}`;
+        }
+
+        function generateOrderId() {
+            return `GEMS${Math.floor(1000000000 + Math.random() * 9000000000)}`;
+        }
+
+        function generateReceipt() {
+            const playerId = document.getElementById('player-id').value;
+            const promoCode = document.getElementById('promo-code').value;
+            const finalPrice = document.getElementById('selected-product').textContent;
+            const orderId = generateOrderId();
+
+            window.location.href = `receipt.html?game=Honor%20of%20Kings&playerId=${encodeURIComponent(playerId)}&promoCode=${encodeURIComponent(promoCode)}&price=${encodeURIComponent(finalPrice)}&orderId=${encodeURIComponent(orderId)}&amount=${encodeURIComponent(selectedAmount)}`;
+        }
+    </script>
+
+    <footer class="footer">
+        <div class="help">
+            <h3>NEED HELP?</h3></div>
+            <a href="https://www.whatsapp.com/" class="whatsapp-btn" target="_blank">WhatsApp</a>
+        </div>
+        <div class="social-media">
+            <a href="https://www.facebook.com/">Facebook</a>
+            <a href="https://www.instagram.com/">Instagram</a>
+        </div>
+        <p>© Copyright Gems Store 2024, All Rights Reserved.</p>
+        <p>
+            <a href="terms.html" class="terms">Terms & Conditions</a> | 
+            <a href="privacy-policy.html" class="privacy-policy">Privacy Policy</a>
+        </p>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,538 @@
+/* General Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background-color: #0e0d31;
+    color: white;
+}
+
+/* Header */
+.header {
+    background-color: #181850;
+    padding: 1rem;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Logo Customization */
+.logo {
+    font-size: 2rem; /* Adjust the font size */
+    font-weight: bold; /* Font weight of the logo */
+    color: white; /* Change logo text color */
+    text-transform: uppercase; /* Make logo text uppercase */
+    letter-spacing: 2px; /* Adjust letter spacing */
+    transition: all 0.3s ease; /* Smooth transition for changes */
+}
+
+.logo:hover {
+    color: #4a41d1; /* Change logo color on hover */
+    transform: scale(1.1); /* Slightly scale the logo on hover */
+}
+
+.logo img {
+    .logo img {
+        width: 200px !important; /* Force the logo to be this width */
+        height: auto;
+    }
+    /* Maintain aspect ratio */
+    border-radius: 5px; /* Optional: round the corners of the logo */
+    transition: transform 0.3s ease; /* Smooth transition for hover effect */
+}
+
+.logo img:hover {
+    transform: scale(1.1); /* Scale the image slightly on hover */
+}
+
+/* Additional customization for logo container */
+.navbar .logo {
+    padding: 10px 20px; /* Adjust padding around the logo */
+    background-color: #181850; /* Background color for the area around the logo */
+    border-radius: 5px; /* Optional: add rounded corners to the logo container */
+    display: flex;
+    align-items: center; /* Vertically align the logo */
+    justify-content: center; /* Horizontally center the logo */
+}
+
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 1rem;
+}
+
+.nav-links a {
+    color: white;
+    text-decoration: none;
+    font-size: 1rem;
+    transition: color 0.3s ease;
+}
+
+.nav-links a:hover {
+    color: #4a41d1;
+}
+
+/* User Menu Dropdown */
+.user-menu {
+    position: relative;
+    display: inline-block;
+}
+
+.user-menu-content {
+    display: none;
+    position: absolute;
+    background-color: #1a1a4c;
+    min-width: 100px;
+    box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
+    z-index: 1;
+    border-radius: 5px;
+}
+
+.user-menu-content a {
+    color: white;
+    padding: 10px;
+    text-decoration: none;
+    display: block;
+    text-align: center;
+}
+
+.user-menu-content a:hover {
+    background-color: #3a31b0;
+}
+
+.user-menu:hover .user-menu-content,
+.user-menu:focus-within .user-menu-content {
+    display: block;
+}
+
+/* Container for password input and toggle button */
+.register-form div, .login-form div {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.register-form input[type="password"], .login-form input[type="password"] {
+    width: 100%;
+    padding-right: 50px; /* Space for the toggle button */
+}
+
+/* Toggle Button Styling */
+.toggle-password-button {
+    position: absolute;
+    right: 10px;
+    top: 10%;
+    background-color: #4a41d1;
+    color: white;
+    padding: 0.3rem 0.5rem;
+    border: none;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s;
+}
+
+.toggle-password-button:hover {
+    background-color: #3a31b0;
+    transform: scale(1.05);
+}
+
+.toggle-password-button:active {
+    transform: scale(0.98);
+}
+
+/* Carousel Container */
+.carousel {
+    position: relative;
+    width: 100%;
+    max-width: 1000px;
+    margin: auto;
+    overflow: hidden;
+    border-radius: 10px;
+    gap: 500px;
+}
+
+.carousel-container {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+}
+
+.carousel-slide {
+    min-width: 100%;
+    box-sizing: border-box;
+}
+
+.carousel-slide img {
+    width: 100%;
+    border-radius: 10px;
+}
+
+/* Carousel Navigation Buttons */
+.carousel-prev, .carousel-next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.6);
+    color: white;
+    border: none;
+    padding: 0.7rem;
+    cursor: pointer;
+    font-size: 1.2rem;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, transform 0.2s;
+}
+
+.carousel-prev:hover, .carousel-next:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+    transform: scale(1.1);
+}
+
+.carousel-prev {
+    left: 10px;
+}
+
+.carousel-next {
+    right: 10px;
+}
+
+/* Instant and Manual Recharges Section */
+.recharges, .manual-recharges {
+    text-align: center;
+    margin: 2rem 0;
+}
+
+.recharges h2, .manual-recharges h2 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+.recharge-cards, .manual-recharges .recharge-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1.5rem;
+    padding: 1rem;
+}
+
+/* Card Styling */
+.card, .manual-recharges .card {
+    background-color: #1a1a4c;
+    padding: 1rem;
+    border-radius: 10px;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.card:hover, .manual-recharges .card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+.card img, .manual-recharges .card img {
+    width: 80%;
+    height: auto;
+    border-radius: 5px;
+    margin-bottom: 0.5rem;
+}
+
+/* Button in Card */
+.card button, .manual-recharges .card button {
+    background-color: #4a41d1;
+    color: white;
+    padding: 0.5rem;
+    font-size: 0.9rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    transition: background-color 0.3s ease, transform 0.2s;
+}
+
+.card button:hover, .manual-recharges .card button:hover {
+    background-color: #3a31b0;
+    transform: scale(1.05);
+}
+
+.card p, .manual-recharges .card p {
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+    font-weight: bold;
+}
+
+/* Why Top-Up Section */
+.why-topup {
+    text-align: center;
+    padding: 2rem;
+}
+
+.why-topup h2 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+.features {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-top: 1rem;
+}
+
+.feature {
+    background-color: #1a1a4c;
+    padding: 1rem;
+    border-radius: 10px;
+    width: 200px;
+    text-align: center;
+    transition: transform 0.2s ease;
+}
+
+.feature:hover {
+    transform: scale(1.05);
+}
+
+/* Register & Login Section */
+.register-section, .login-section {
+    background-color: #1a1a4c;
+    color: white;
+    padding: 2rem;
+    border-radius: 10px;
+    max-width: 400px;
+    margin: 2rem auto;
+    text-align: center;
+}
+
+.register-section h2, .login-section h2 {
+    margin-bottom: 1rem;
+}
+
+.register-form, .login-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.register-form label, .login-form label {
+    text-align: left;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+}
+
+.register-form input, .login-form input {
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+    border-radius: 5px;
+    border: none;
+    font-size: 1rem;
+    color: black;
+}
+
+.error-message {
+    color: #ff4d4d;
+    margin-bottom: 1rem;
+}
+
+/* Button Styles */
+button, .register-btn, .login-btn, .apply-code, .buy-now, .carousel-prev, .carousel-next {
+    background-color: #4a41d1;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.2s;
+}
+
+button:hover, .register-btn:hover, .login-btn:hover, .apply-code:hover, .buy-now:hover, .carousel-prev:hover, .carousel-next:hover {
+    background-color: #3a31b0;
+    transform: scale(1.05);
+}
+
+button:active, .register-btn:active, .login-btn:active, .apply-code:active, .buy-now:active, .carousel-prev:active, .carousel-next:active {
+    transform: scale(0.98);
+}
+
+.footer {
+    background-color: #4a41d1;
+    color: white;
+    padding: 1rem;
+    text-align: center;
+    font-size: 0.9rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.help {
+    margin-bottom: 1rem;
+}
+
+.whatsapp-btn {
+    background-color: #25D366;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    font-weight: bold;
+    text-decoration: none;
+    display: inline-block;
+    transition: background-color 0.3s ease, transform 0.2s, box-shadow 0.2s;
+    text-align: center;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Shadow for lift effect */
+    margin-bottom: 20px; /* Raises button above surrounding text */
+}
+
+.whatsapp-btn:hover {
+    background-color: #1dbb57;
+    transform: scale(1.05);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15); /* Deeper shadow on hover */
+}
+
+
+.social-media a {
+    color: white;
+    margin: 0 0.5rem;
+    text-decoration: none;
+    font-size: 1.2rem;
+    transition: color 0.3s ease;
+}
+
+.social-media a:hover {
+    color: rgba(255, 0, 123, 0.956);
+}
+
+.terms, .privacy-policy {
+    color: white;
+    margin: 0 0.5rem;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.3s ease;
+}
+
+.terms:hover, .privacy-policy:hover {
+    color: #3a31b0;
+}
+
+/* Confirmation Section Styling */
+.confirmation {
+    width: 80%;
+    max-width: 800px;
+    margin: 2rem auto;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.step {
+    background-color: #1a1a4c;
+    padding: 1rem;
+    border-radius: 10px;
+    color: white;
+}
+
+.step h2 {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+}
+
+.step-info {
+    background-color: #4a41d1;
+    color: white;
+    border-radius: 50%;
+    padding: 0.2rem 0.5rem;
+    display: inline-block;
+    text-align: center;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"]{
+    width: 100%;
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+    border-radius: 5px;
+    border: none;
+    color: black;
+    font-size: 1rem;
+}
+
+select {
+    width: 100%;
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+    border-radius: 5px;
+    border: none;
+    color: black;
+    font-size: 1rem;
+    appearance: none;
+}
+
+select:focus {
+    outline: none;
+}
+
+.buy-now {
+    background-color: #4a41d1;
+    padding: 0.7rem 2rem;
+    color: white;
+    font-size: 1.2rem;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s;
+}
+
+.buy-now:hover {
+    background-color: #3a31b0;
+    transform: scale(1.05);
+}
+
+.buy-now:active {
+    transform: scale(0.98);
+}
+
+.receipt {
+    text-align: center;
+    padding: 2rem;
+    background-color: #0e0d31;
+    color: white;
+}
+
+.order-summary {
+    background-color: #181850;
+    padding: 1rem;
+    border-radius: 10px;
+    width: 300px;
+    margin: 1rem auto;
+    text-align: left;
+    font-size: 1rem;
+}
+
+.order-summary h3 {
+    color: #4a41d1;
+    margin-bottom: 1rem;
+}
+
+.buy-again {
+    background-color: #4a41d1;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+    transition: background-color 0.3s ease;
+}
+
+.buy-again:hover {
+    background-color: #3a31b0;
+}

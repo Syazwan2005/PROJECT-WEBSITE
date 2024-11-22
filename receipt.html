@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Receipt</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <section class="receipt">
+        <h1>Thank You For Your Order</h1>
+        <p id="order-message"></p>
+
+        <!-- Order Summary -->
+        <div class="order-summary">
+            <h2>Your Order Summary</h2>
+            <p><strong>Order ID:</strong> <span id="order-id"></span></p>
+            <p><strong>Game:</strong> <span id="game-name"></span></p>
+            <p><strong>Item Purchased:</strong> <span id="item-purchase"></span></p>
+            <p id="user-id-container" style="display: none;"><strong>User ID:</strong> <span id="user-id"></span></p>
+            <p id="server-id-container" style="display: none;"><strong>Server ID:</strong> <span id="server-id"></span></p>
+            <p id="email-container" style="display: none;"><strong>Email:</strong> <span id="email"></span></p>
+            <p id="player-id-container" style="display: none;"><strong>Player ID:</strong> <span id="player-id"></span></p>
+            <p id="character-id-container" style="display: none;"><strong>Character ID:</strong> <span id="character-id"></span></p>
+            <p id="riot-id-container" style="display: none;"><strong>Riot ID:</strong> <span id="riot-id"></span></p>
+            <p id="player-tag-container" style="display: none;"><strong>Player Tag:</strong> <span id="player-tag"></span></p>
+            <p id="open-id-container" style="display: none;"><strong>Open ID:</strong> <span id="open-id"></span></p>
+            <p><strong>Promo Code:</strong> <span id="promo-code"></span></p>
+            <p><strong>Total Price:</strong> <span id="final-price"></span></p>
+        </div>
+
+        <button onclick="window.location.href='index.php'">Make Another Purchase</button>
+    </section>
+
+    <script>
+        function getQueryParam(param, defaultValue = '') {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param) || defaultValue;
+        }
+
+        // Set order details
+        document.getElementById('order-id').textContent = getQueryParam('orderId', 'N/A');
+        const gameName = getQueryParam('game', 'Unknown Game');
+        document.getElementById('game-name').textContent = gameName;
+        document.getElementById('promo-code').textContent = getQueryParam('promoCode', 'None');
+        document.getElementById('final-price').textContent = getQueryParam('price', 'RM 0.00');
+
+        // Set specific details based on the game
+        let itemName = '';
+        
+        switch (gameName) {
+            case 'PUBG Mobile':
+                itemName = 'UC';
+                document.getElementById('player-id-container').style.display = 'block';
+                document.getElementById('player-id').textContent = getQueryParam('playerId', 'N/A');
+                break
+
+            case 'Mobile Legends':
+                itemName = 'Diamonds';
+                document.getElementById('user-id-container').style.display = 'block';
+                document.getElementById('server-id-container').style.display = 'block';
+                document.getElementById('user-id').textContent = getQueryParam('userId', 'N/A');
+                document.getElementById('server-id').textContent = getQueryParam('serverId', 'N/A');
+                break;
+
+            case 'Genshin Impact':
+                itemName = 'Primogems';
+                document.getElementById('user-id-container').style.display = 'block';
+                document.getElementById('server-id-container').style.display = 'block';
+                document.getElementById('user-id').textContent = getQueryParam('userId', 'N/A');
+                document.getElementById('server-id').textContent = getQueryParam('serverId', 'N/A');
+                break;
+
+                case 'Valorant':
+                itemName = 'Valorant Points';
+                document.getElementById('riot-username-container').style.display = 'block';
+                document.getElementById('riot-username').textContent = getQueryParam('riotUsername', 'N/A');
+                break;
+
+            case 'Call of Duty: Mobile':
+                itemName = 'CP';
+                document.getElementById('open-id-container').style.display = 'block';
+                document.getElementById('open-id').textContent = getQueryParam('openId', 'N/A');
+                break;
+
+            case 'Sausage Man':
+                itemName = 'Candies';
+                document.getElementById('character-id-container').style.display = 'block';
+                document.getElementById('character-id').textContent = getQueryParam('characterId', 'N/A');
+                break;
+
+                case 'Honor of Kings':
+                itemName = 'Gold';
+                document.getElementById('player-id-container').style.display = 'block';
+                document.getElementById('player-id').textContent = getQueryParam('playerId', 'N/A');
+                break;
+
+            case 'Wild Rift':
+                itemName = 'Wild Cores';
+                document.getElementById('riot-id-container').style.display = 'block';
+                document.getElementById('riot-id').textContent = getQueryParam('riotId', 'N/A');
+                break;
+
+            case 'E-Football':
+                itemName = 'E-Football Coins';
+                document.getElementById('email-container').style.display = 'block';
+                document.getElementById('email').textContent = getQueryParam('email', 'N/A');
+                break;
+
+            case 'Super SUS':
+                itemName = 'Stars';
+                document.getElementById('user-id-container').style.display = 'block';
+                document.getElementById('user-id').textContent = getQueryParam('userId', 'N/A');
+                break;
+
+            case 'Black Clover M':
+                itemName = 'Black Crystals';
+                document.getElementById('user-id-container').style.display = 'block';
+                document.getElementById('user-id').textContent = getQueryParam('userId', 'N/A');
+                break;
+
+            case 'Clash of Clans':
+                itemName = 'Gems';
+                document.getElementById('player-tag-container').style.display = 'block';
+                document.getElementById('player-tag').textContent = getQueryParam('playerTag', 'N/A');
+                break;
+
+            default:
+                itemName = 'Item';
+        }
+
+        // Combine amount with item name for display
+        const itemAmount = getQueryParam('amount', '0');
+        document.getElementById('item-purchase').textContent = `${itemAmount} ${itemName}`;
+
+        // Display a custom thank-you message
+        document.getElementById('order-message').textContent = `The ${itemAmount} ${itemName} have been added to your ${gameName} account.`;
+    </script>
+</body>
+</html>
